@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    environment:
+      DJANGO_DB_HOST: ${DJANGO_DB_HOST}
+      DJANGO_DB_NAME: ${DJANGO_DB_NAME}
+      DJANGO_DB_USER: ${DJANGO_DB_USER}
+      DJANGO_DB_PASS: ${DJANGO_DB_PASS}
+      DJANGO_DB_PORT: ${DJANGO_DB_PORT}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - media_data:/app/media/uploads
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  media_data:
